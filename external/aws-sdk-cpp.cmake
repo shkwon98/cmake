@@ -14,7 +14,7 @@ if(NOT AWSSDK_FOUND)
     set(FETCHCONTENT_QUIET OFF)
     FetchContent_Declare(aws-sdk-cpp
         GIT_REPOSITORY https://github.com/aws/aws-sdk-cpp.git
-        GIT_TAG        1.11.238
+        GIT_TAG        1.9.220
         GIT_PROGRESS   TRUE
         GIT_SHALLOW    TRUE)
     FetchContent_MakeAvailable(aws-sdk-cpp)
