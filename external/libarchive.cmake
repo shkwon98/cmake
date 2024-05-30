@@ -4,7 +4,6 @@ if(NOT LibArchive_FOUND)
     message(STATUS "Downloading libarchive")
     include(FetchContent)
 
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
     set(ENABLE_TEST       OFF CACHE BOOL "Enable tests" FORCE)
     set(ENABLE_COVERAGE   OFF CACHE BOOL "Enable coverage" FORCE)
 
@@ -17,9 +16,7 @@ if(NOT LibArchive_FOUND)
     FetchContent_MakeAvailable(libarchive)
 
     if(NOT TARGET LibArchive::LibArchive)
-        add_library(LibArchive::LibArchive UNKNOWN IMPORTED)
-        set_target_properties(LibArchive::LibArchive PROPERTIES
-            IMPORTED_LOCATION "${libarchive_BINARY_DIR}/libarchive/libarchive.a"
-            INTERFACE_INCLUDE_DIRECTORIES "${libarchive_SOURCE_DIR}/libarchive")
+        add_custom_target(archive_tmp DEPENDS archive)
+        add_library(LibArchive::LibArchive ALIAS archive)
     endif()
 endif()
