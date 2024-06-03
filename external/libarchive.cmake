@@ -4,6 +4,9 @@ if(NOT LibArchive_FOUND)
     message(STATUS "Downloading libarchive")
     include(FetchContent)
 
+    set(ENABLE_TAR        OFF CACHE BOOL "Enable tar" FORCE)
+    set(ENABLE_CPIO       OFF CACHE BOOL "Enable cpio" FORCE)
+    set(ENABLE_CAT        OFF CACHE BOOL "Enable cat" FORCE)
     set(ENABLE_TEST       OFF CACHE BOOL "Enable tests" FORCE)
     set(ENABLE_COVERAGE   OFF CACHE BOOL "Enable coverage" FORCE)
 
