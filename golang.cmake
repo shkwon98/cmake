@@ -55,7 +55,7 @@ function(target_cgo_link_libraries NAME)
     set(multiValueArgs IMPORT)
     cmake_parse_arguments(target_cgo_link_libraries "" "" "${multiValueArgs}" ${ARGN})
 
-    cgo_fetch_cflags_and_ldflags(${target_cgo_link_libraries_IMPORT} ${NAME}_CFLAG_LIST ${NAME}_LDFLAG_LIST)
+    cgo_fetch_cflags_and_ldflags(${NAME} ${target_cgo_link_libraries_IMPORT} ${NAME}_CFLAG_LIST ${NAME}_LDFLAG_LIST)
     if(CMAKE_INSTALL_RPATH)
         list(APPEND ${NAME}_LDFLAG_LIST -Wl,-rpath,${CMAKE_INSTALL_RPATH})
     endif()
@@ -95,7 +95,7 @@ macro(go_build_envs)
 endmacro()
 
 
-macro(cgo_fetch_cflags_and_ldflags TARGET CFLAG_LIST LDFLAG_LIST)
+macro(cgo_fetch_cflags_and_ldflags NAME TARGET CFLAG_LIST LDFLAG_LIST)
     message(STATUS "Fetching CFLAGS and LDFLAGS for ${TARGET}")
 
     # In case the given library is not a cmake target. e.g. pthread, rt, etc.
@@ -107,10 +107,12 @@ macro(cgo_fetch_cflags_and_ldflags TARGET CFLAG_LIST LDFLAG_LIST)
 
     # In case the given library is a cmake target
     else()
+        add_dependencies(${NAME} ${TARGET})
+
         get_target_property(LIBS ${TARGET} LINK_LIBRARIES)
         # Recursively fetch the flags from the dependencies
         if(LIBS)
-            cgo_fetch_cflags_and_ldflags(${LIBS} ${CFLAG_LIST} ${LDFLAG_LIST})
+            cgo_fetch_cflags_and_ldflags(${NAME} ${LIBS} ${CFLAG_LIST} ${LDFLAG_LIST})
         endif()
 
         get_target_property(TYPE ${TARGET} TYPE)
