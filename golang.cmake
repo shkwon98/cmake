@@ -24,8 +24,6 @@ function(add_cgo_executable NAME)
     add_custom_command(
         OUTPUT ${CGO_OUTPUT}
         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-        # COMMENT "CGO_CFLAGS: $<TARGET_PROPERTY:${NAME},CGO_CFLAGS>"
-        COMMENT "CGO_LDFLAGS: $<TARGET_PROPERTY:${NAME},CGO_LDFLAGS>"
         COMMAND ${CMAKE_COMMAND} -E remove ${CGO_OUTPUT}
         COMMAND GO_ENVS=${GO_ENVS}
                 CGO_ENABLED=1
