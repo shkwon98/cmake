@@ -5,13 +5,10 @@ function(add_go_executable NAME)
     file(GLOB GO_SOURCE RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.go")
     set(GO_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
 
-    add_custom_command(
-        OUTPUT ${GO_OUTPUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    add_custom_target(${NAME} ALL
         COMMAND GO_ENVS=${GO_ENVS}
-                ${CMAKE_Go_COMPILER} build -o "${CMAKE_CURRENT_BINARY_DIR}/${NAME}" ${GO_SOURCE})
-
-    add_custom_target(${NAME} ALL DEPENDS ${GO_OUTPUT})
+                ${CMAKE_Go_COMPILER} build -o ${GO_OUTPUT} ${GO_SOURCE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 endfunction(add_go_executable)
 
 # Usage: add_cgo_executable(target)
@@ -21,18 +18,15 @@ function(add_cgo_executable NAME)
     file(GLOB GO_SOURCE RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.go")
     set(CGO_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${NAME})
 
-    add_custom_command(
-        OUTPUT ${CGO_OUTPUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    add_custom_target(${NAME} ALL
         COMMAND ${CMAKE_COMMAND} -E remove ${CGO_OUTPUT}
         COMMAND GO_ENVS=${GO_ENVS}
                 CGO_ENABLED=1
                 CC=${CMAKE_C_COMPILER}
                 CGO_CFLAGS=$<TARGET_PROPERTY:${NAME},CGO_CFLAGS>
                 CGO_LDFLAGS=$<TARGET_PROPERTY:${NAME},CGO_LDFLAGS>
-                ${CMAKE_Go_COMPILER} build -o ${CGO_OUTPUT} ${GO_SOURCE})
-
-    add_custom_target(${NAME} ALL DEPENDS ${CGO_OUTPUT})
+                ${CMAKE_Go_COMPILER} build -o ${CGO_OUTPUT} ${GO_SOURCE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 endfunction()
 
 # Usage: target_go_get(target PACKAGE package1 package2 ...)
