@@ -4,6 +4,8 @@
 #  SCTP_FOUND        - System has sctp
 #  SCTP_INCLUDE_DIRS - The sctp include directories
 #  SCTP_LIBRARIES    - The sctp library
+#
+# Also creates an imported target sctp::sctp
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_SCTP sctp)
@@ -36,5 +38,18 @@ message(STATUS "SCTP LIBRARIES: " ${SCTP_LIBRARIES})
 message(STATUS "SCTP INCLUDE DIRS: " ${SCTP_INCLUDE_DIRS})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SCTP DEFAULT_MSG SCTP_LIBRARIES SCTP_INCLUDE_DIRS)
+find_package_handle_standard_args(SCTP
+    DEFAULT_MSG
+    SCTP_LIBRARIES
+    SCTP_INCLUDE_DIRS
+)
+
 mark_as_advanced(SCTP_LIBRARIES SCTP_INCLUDE_DIRS)
+
+if(SCTP_FOUND AND NOT TARGET sctp::sctp)
+    add_library(sctp::sctp UNKNOWN IMPORTED)
+    set_target_properties(sctp::sctp PROPERTIES
+        IMPORTED_LOCATION "${SCTP_LIBRARIES}"
+        INTERFACE_INCLUDE_DIRECTORIES "${SCTP_INCLUDE_DIRS}"
+    )
+endif()
