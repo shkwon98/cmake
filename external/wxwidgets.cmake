@@ -1,4 +1,4 @@
-find_package(wxWidgets CONFIG REQUIRED COMPONENTS core base)
+find_package(wxWidgets CONFIG COMPONENTS core base)
 
 if(NOT wxWidgets_FOUND)
    message(STATUS "Downloading wxWidgets")
